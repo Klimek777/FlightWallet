@@ -21,7 +21,7 @@ namespace FlightWallet.ViewModels
             _context = context;   
         }
         [ObservableProperty]
-        private ObservableCollection<Flight> _flights = new();
+        private ObservableCollection<Flight> _flights;
         [ObservableProperty]
         private Flight _operatingFlight = new();
         [ObservableProperty]
