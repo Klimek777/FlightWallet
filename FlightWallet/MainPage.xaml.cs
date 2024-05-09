@@ -9,6 +9,7 @@ namespace FlightWallet
         public MainPage( FlightsViewModel viewModel)
         {
             InitializeComponent();
+            Application.Current.UserAppTheme=AppTheme.Light;
             _viewModel = viewModel;
             BindingContext = viewModel;
         }
