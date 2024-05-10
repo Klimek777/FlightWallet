@@ -5,21 +5,31 @@
              xmlns:models="clr-namespace:FlightWallet.Models"
              x:DataType="vm:FlightsViewModel"
              x:Class="FlightWallet.Views.AddPage"
-             Title="AddPage">
-   
-    <VerticalStackLayout>
-        <Entry Placeholder="Flight From Name"
-               Text="{Binding OperatingFlight.FlightFromName, Mode=TwoWay}" />
-        <Entry Placeholder="Flight To Name"
-               Text="{Binding OperatingFlight.FlightToName, Mode=TwoWay}" />
-        <Entry Placeholder="Price"
-               Keyboard="Numeric"
-               Text="{Binding OperatingFlight.Price, Mode=TwoWay}" />
-        <DatePicker Date="{Binding OperatingFlight.DepartureDate}" />
-        <Button Text="Add Flight"
-                HorizontalOptions="Center"
-VerticalOptions="End"
-Margin="0,10,0,20"
-                Command="{Binding SaveFlightCommand}" />
-    </VerticalStackLayout>
+             Title="Add Flight">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <Label Text="Flight Details" FontSize="Title" HorizontalOptions="Center" Margin="0,20,0,10" />
+
+                <Entry Placeholder="Country from" Text="{Binding OperatingFlight.FlightFromName, Mode=TwoWay}" Margin="0,0,0,10" />
+                <Entry Placeholder="Airport City from" Text="{Binding OperatingFlight.AirportFromName, Mode=TwoWay}" Margin="0,0,0,10" />
+                <Entry Placeholder="Country to" Text="{Binding OperatingFlight.FlightToName, Mode=TwoWay}" Margin="0,0,0,10" />
+                <Entry Placeholder="Airport City to" Text="{Binding OperatingFlight.AirportToName, Mode=TwoWay}" Margin="0,0,0,10" />
+
+                <StackLayout Orientation="Horizontal" Margin="0,0,0,10">
+                    <Entry Placeholder="Price" Keyboard="Numeric" Text="{Binding OperatingFlight.Price, Mode=TwoWay}" HorizontalOptions="FillAndExpand" />
+                    <Label Text="PLN" VerticalOptions="Center" Margin="5,0,0,0" />
+                </StackLayout>
+
+                <DatePicker Date="{Binding OperatingFlight.DepartureDate}" Margin="0,0,0,10" />
+
+                <Button Text="Add Flight"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="End"
+                        Margin="0,10,0,20"
+                        Command="{Binding SaveFlightCommand}" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
 </ContentPage>

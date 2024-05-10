@@ -62,11 +62,11 @@
                                                     Margin="0,0,20,5" 
                                                     HorizontalOptions="Start"/>
 
-                                            <Label Text="AirportFrom"
+                                            <Label Text="{Binding AirportFromName}"
                                                     FontAttributes="None"
                                                     FontSize="12"
                                                     Margin="0,0,20,5" 
-                                                    HorizontalOptions="Start"/>
+                                                    HorizontalOptions="Center"/>
                                         </StackLayout>
                                         
                                         <Image Source="plane.png"
@@ -81,10 +81,11 @@
                                                 FontSize="18"
                                                 Margin="20,0,0,5"
                                                 HorizontalOptions="End"/>
-                                            <Label Text="AirportTo"
+                                            <Label Text="{Binding AirportToName}"
                                                     FontAttributes="None"
                                                     FontSize="12"
-                                                    Margin="20,0,0,5"/>
+                                                    Margin="20,0,0,5"
+                                                    HorizontalOptions="Center"/>
                                             
                                         </StackLayout>
 

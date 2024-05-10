@@ -13,9 +13,17 @@ namespace FlightWallet.Models
         public int Id { get; set; }
         public string FlightFromName { get; set; }
         public string FlightToName {  get; set; }
+        public string AirportFromName { get; set; }
+        public string AirportToName { get; set; }
+
         public decimal Price { get; set; }
         public DateTime DepartureDate { get; set; }
 
+        public string ImagePath { get; set; } 
+
         public Flight Clone() => MemberwiseClone() as Flight;
+
+        
+
     }
 }

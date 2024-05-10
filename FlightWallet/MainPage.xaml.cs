@@ -13,7 +13,7 @@ namespace FlightWallet
             _viewModel = viewModel;
             BindingContext = viewModel;
         }
-
+        
         protected async override void OnAppearing()
         {
             base.OnAppearing();
