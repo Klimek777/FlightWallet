@@ -57,6 +57,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\add_box.png" />
 	  <None Remove="Resources\Images\plane.png" />
 	</ItemGroup>
 

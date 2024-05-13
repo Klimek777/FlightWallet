@@ -19,7 +19,12 @@ namespace FlightWallet.Models
         public decimal Price { get; set; }
         public DateTime DepartureDate { get; set; }
 
-        public string ImagePath { get; set; } 
+        public string ImagePath { get; set; }
+
+        public Flight()
+        {
+            DepartureDate = DateTime.Now.Date;
+        }
 
         public Flight Clone() => MemberwiseClone() as Flight;
 

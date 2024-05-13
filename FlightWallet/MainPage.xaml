@@ -6,10 +6,12 @@
              x:DataType="vm:FlightsViewModel"
              x:Class="FlightWallet.MainPage"
              Title="FlightWallet"
-             >
+             BackgroundColor="White">
 
-    <ScrollView>
-        <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="*, Auto">
+
+        <ScrollView>
+        <Grid Grid.Row="0">
 
             <VerticalStackLayout Grid.RowSpan="2"
                              VerticalOptions="Center"
@@ -23,93 +25,87 @@
                    HorizontalOptions="Center"/>
             </VerticalStackLayout>
 
-            <Label Grid.Row="0"
-               Text="Your Flights"
-               FontAttributes="Bold"
-               FontSize="18"
-               Padding="10"/>
             <Grid Grid.Row="1"
               RowDefinitions="*, Auto">
-                <CollectionView Grid.Row="0"
+                    <CollectionView Grid.Row="0"
                                 ItemsSource="{Binding Flights}"
                                 Margin="20">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout ItemSpacing="10"
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="13"
                                        Orientation="Vertical"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Flight">
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Flight">
 
                                 <Frame CornerRadius="8"
                                    BorderColor="#F0F0F0"
                                    HasShadow="True"
                                    Padding="10"
-                                   Margin="10"
                                    BackgroundColor="LightBlue"
                                    VerticalOptions="Center"
                                    HorizontalOptions="FillAndExpand">
 
-                                <StackLayout BackgroundColor="LightBlue">
+                                    <StackLayout BackgroundColor="LightBlue">
 
-                                    <StackLayout Orientation="Horizontal"
+                                        <StackLayout Orientation="Horizontal"
                                                  HorizontalOptions="Center">
 
-                                        <StackLayout Orientation="Vertical"
+                                            <StackLayout Orientation="Vertical"
                                                      VerticalOptions="Center">
-                                            <Label Text="{Binding FlightFromName}"
+                                                <Label Text="{Binding FlightFromName}"
                                                     FontAttributes="Bold"
                                                     FontSize="18"
                                                     Margin="0,0,20,5" 
                                                     HorizontalOptions="Start"/>
 
-                                            <Label Text="{Binding AirportFromName}"
+                                                <Label Text="{Binding AirportFromName}"
                                                     FontAttributes="None"
                                                     FontSize="12"
                                                     Margin="0,0,20,5" 
                                                     HorizontalOptions="Center"/>
-                                        </StackLayout>
-                                        
-                                        <Image Source="plane.png"
+                                            </StackLayout>
+
+                                            <Image Source="plane.png"
                                                    Rotation="90"
                                                    WidthRequest="40"
                                                    HeightRequest="40"/>
-                                        <StackLayout Orientation="Vertical"
+                                            <StackLayout Orientation="Vertical"
                                                      VerticalOptions="Center">
-                                            
-                                        <Label Text="{Binding FlightToName}"
+
+                                                <Label Text="{Binding FlightToName}"
                                                 FontAttributes="Bold"
                                                 FontSize="18"
                                                 Margin="20,0,0,5"
                                                 HorizontalOptions="End"/>
-                                            <Label Text="{Binding AirportToName}"
+                                                <Label Text="{Binding AirportToName}"
                                                     FontAttributes="None"
                                                     FontSize="12"
                                                     Margin="20,0,0,5"
                                                     HorizontalOptions="Center"/>
-                                            
+
+                                            </StackLayout>
+
                                         </StackLayout>
 
-                                    </StackLayout>
-
-                                    <BoxView HeightRequest="25"
+                                        <BoxView HeightRequest="25"
                                              BackgroundColor="LightBlue"/>
 
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding Price, StringFormat='Price: {0}'}"
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding Price, StringFormat='Price: {0}'}"
                                                 FontSize="16"
                                                 Margin="0,0,0,10"
                                                HorizontalOptions="StartAndExpand"/>
 
-                                        <Label Text="{Binding DepartureDate}"
+                                            <Label Text="{Binding DepartureDate}"
                                                FontSize="16"
                                                Margin="0,0,0,10"
                                                HorizontalOptions="EndAndExpand"/>
 
-                                    </StackLayout>
+                                        </StackLayout>
 
-                                    
-                                    <StackLayout Orientation="Horizontal">
-                                        <Button Text="Edit"
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Edit"
                                                 Padding="10,5"
                                                 FontSize="14"
                                                 CornerRadius="5"
@@ -118,7 +114,7 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightsViewModel}}, Path=SetOperatingFlightCommand}"
                                                 CommandParameter="{Binding .}"/>
 
-                                        <Button Text="Del"
+                                            <Button Text="Del"
                                                 Padding="10,5"
                                                 CornerRadius="5"
                                                 FontSize="14"
@@ -126,41 +122,49 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightsViewModel}}, Path=DeleteFlightCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="10,0,0,0"/>
-                                    </StackLayout>
+                                        </StackLayout>
 
-                                </StackLayout>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                    <CollectionView.EmptyView>
-                        <ContentView>
-                            <VerticalStackLayout HorizontalOptions="Center"
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.EmptyView>
+                            <ContentView>
+                                <VerticalStackLayout HorizontalOptions="Center"
                                              VerticalOptions="Center">
-                                <Label Text="No Flights Found"
+                                    <Label Text="No Flights Found"
                                    FontSize="18"
                                    FontAttributes="Bold"
                                    HorizontalTextAlignment="Center"/>
-                                <Label Text="Try creating a flight"/>
-                            </VerticalStackLayout>
-                        </ContentView>
-                    </CollectionView.EmptyView>
-                </CollectionView>
-                <Button Grid.Row="1"
-        Text="Add New Flight"
-        Clicked="NavigateToAddPage"
-        HorizontalOptions="Fill"
-        VerticalOptions="End"
-        Margin="20,10,20,20"
-        BackgroundColor="#007AFF"
-        TextColor="White"
-        FontSize="16"
-        CornerRadius="10"
-        Padding="20,10"/>
-
-
-            </Grid>
+                                    <Label Text="Try creating a flight"/>
+                                </VerticalStackLayout>
+                            </ContentView>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </Grid>
         </Grid>
 
     </ScrollView>
+
+        <Grid Grid.Row="1" BackgroundColor="White" VerticalOptions="End">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Row="1"
+                Text="Add New Flight"
+                Clicked="NavigateToAddPage"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                FontSize="15"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="15"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+        </Grid>
+    </Grid>
 
 </ContentPage>
