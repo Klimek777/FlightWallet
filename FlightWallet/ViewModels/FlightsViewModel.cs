@@ -85,7 +85,7 @@ namespace FlightWallet.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            Flights ??= new ObservableCollection<Flight>();
+                            await Shell.Current.DisplayAlert(" error", ex.ToString(), "OK");
 
                         }
 
