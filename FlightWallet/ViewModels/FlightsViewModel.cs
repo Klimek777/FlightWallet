@@ -73,7 +73,21 @@ namespace FlightWallet.ViewModels
                     {
                         //create Flight
                         await _context.AddItemAsync<Flight>(OperatingFlight);
-                        Flights.Add(OperatingFlight);
+                        try
+                        {
+                            if (Flights is null)
+                            {
+                                // Jeśli OperatingFlight jest null, utwórz nowy obiekt Flight
+                                Flights = new();
+                            }
+                            Flights.Add(OperatingFlight);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            Flights ??= new ObservableCollection<Flight>();
+
+                        }
 
                     }
                     else
