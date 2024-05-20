@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:FlightWallet.ViewModels"
+             xmlns:models="clr-namespace:FlightWallet.Models"
+             x:DataType="vm:FlightsViewModel"
+             x:Class="FlightWallet.Views.EditPage"
+             Title="Edit Flight">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior TextOverride="Back" />
+    </Shell.BackButtonBehavior>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Define common colors -->
+            <Color x:Key="PrimaryColor">#2196F3</Color>
+            <Color x:Key="AccentColor">#FFC107</Color>
+            <Color x:Key="LightGray">#D3D3D3</Color>
+            <Color x:Key="BlackColor">#888888</Color>
+
+            <!-- Define styles for Entry controls -->
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="FontSize" Value="Medium" />
+            </Style>
+
+            <!-- Define styles for ImageButton controls -->
+            <Style TargetType="ImageButton">
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="WidthRequest" Value="40" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+            </Style>
+
+            <!-- Define styles for Button controls -->
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="FontSize" Value="Medium" />
+            </Style>
+
+            <!-- Define styles for Label controls -->
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="TextColor" Value="Black" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20">
+                <Label Text="Flight Details" FontSize="Title" HorizontalOptions="Center" Margin="0,20,0,10" />
+
+                <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="Center">
+                    <ImageButton
+                        Source="AppIcon/camera.png"
+                        BackgroundColor="Gray"
+                        Clicked="SelectPhoto_Click" />
+
+                    <ImageButton
+                        Source="AppIcon/remove.png"
+                        BackgroundColor="Red"
+                        Clicked="RemovePhoto_Click" />
+
+                    <ImageButton
+                        Source="AppIcon/rotate.png"
+                        BackgroundColor="LimeGreen"
+                        Clicked="RotatePhoto_Click" />
+                </StackLayout>
+
+                <Image Source="{Binding OperatingFlight.ImagePath}"
+                       Aspect="AspectFit"
+                       MaximumWidthRequest="250"
+                       MaximumHeightRequest="250"
+                       Margin="0,0,0,10" />
+
+                <Frame Padding="0" Margin="0,0,0,10" BorderColor="{StaticResource BlackColor}" CornerRadius="10" HasShadow="False">
+                    <Entry Placeholder="Country from" Text="{Binding OperatingFlight.FlightFromName, Mode=TwoWay}" />
+                </Frame>
+                <Frame Padding="0" Margin="0,0,0,10" BorderColor="{StaticResource BlackColor}" CornerRadius="10" HasShadow="False">
+                    <Entry Placeholder="Airport City from" Text="{Binding OperatingFlight.AirportFromName, Mode=TwoWay}" />
+                </Frame>
+                <Frame Padding="0" Margin="0,0,0,10" BorderColor="{StaticResource BlackColor}" CornerRadius="10" HasShadow="False">
+                    <Entry Placeholder="Country to" Text="{Binding OperatingFlight.FlightToName, Mode=TwoWay}" />
+                </Frame>
+                <Frame Padding="0" Margin="0,0,0,10" BorderColor="{StaticResource BlackColor}" CornerRadius="10" HasShadow="False">
+                    <Entry Placeholder="Airport City to" Text="{Binding OperatingFlight.AirportToName, Mode=TwoWay}" />
+                </Frame>
+
+                <StackLayout Orientation="Horizontal" Margin="0,0,0,10">
+                    <Frame Padding="0" Margin="0,0,0,0" BorderColor="{StaticResource BlackColor}" CornerRadius="10" HasShadow="False" HorizontalOptions="FillAndExpand">
+                        <Entry Placeholder="Price" Keyboard="Numeric" Text="{Binding OperatingFlight.Price, Mode=TwoWay}" />
+                    </Frame>
+                    <Label Text="PLN" VerticalOptions="Center" Margin="5,0,0,0" />
+                </StackLayout>
+
+                <DatePicker Date="{Binding OperatingFlight.DepartureDate}" Margin="0,0,0,10" />
+                <TimePicker Time="{Binding OperatingFlight.DepartureTime}" Margin="0,0,0,10" />
+
+                <Button Text="Save Flight"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="End"
+                        Margin="0,10,0,20"
+                        Command="{Binding SaveFlightCommand}" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

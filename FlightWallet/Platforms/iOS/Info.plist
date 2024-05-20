@@ -28,5 +28,11 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.maui.com-companyname-flightwallet</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Calendar</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera</string>
 </dict>
 </plist>

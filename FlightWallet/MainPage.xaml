@@ -29,7 +29,8 @@
               RowDefinitions="*, Auto">
                     <CollectionView Grid.Row="0"
                                 ItemsSource="{Binding Flights}"
-                                Margin="20">
+                                Margin="20"
+                                BackgroundColor="White">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout ItemSpacing="13"
                                        Orientation="Vertical"/>
@@ -38,8 +39,8 @@
                             <DataTemplate x:DataType="models:Flight">
 
                                 <Frame CornerRadius="8"
-                                   BorderColor="#F0F0F0"
-                                   HasShadow="True"
+                                   BorderColor="#A0A0A0"
+                                   HasShadow="False"
                                    Padding="10"
                                    BackgroundColor="LightBlue"
                                    VerticalOptions="Center"
@@ -87,31 +88,48 @@
 
                                         </StackLayout>
 
-                                        <BoxView HeightRequest="25"
-                                             BackgroundColor="LightBlue"/>
+                                        <!--<BoxView HeightRequest="5"
+                                             BackgroundColor="LightBlue"/>-->
 
+                                        <Image Source="{Binding ImagePath}"
+                                               Aspect="AspectFit"
+                                               MaximumWidthRequest="250"
+                                               MaximumHeightRequest="250"
+                                               Margin="0,0,0,10">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnImageTapped" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+
+                                        <!--<BoxView HeightRequest="5"
+                                             BackgroundColor="LightBlue"/>-->
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{Binding Price, StringFormat='Price: {0}'}"
                                                 FontSize="16"
                                                 Margin="0,0,0,10"
                                                HorizontalOptions="StartAndExpand"/>
 
-                                            <Label Text="{Binding DepartureDate}"
-                                               FontSize="16"
-                                               Margin="0,0,0,10"
-                                               HorizontalOptions="EndAndExpand"/>
+                                            <StackLayout Orientation="Vertical">
+                                                <Label Text="{Binding DepartureDate, StringFormat='{0:d}'}"
+                                                   FontSize="18"
+                                                   Margin="0,0,0,0"
+                                                   HorizontalOptions="EndAndExpand"/>
 
+                                                <Label Text="{Binding DepartureTime, StringFormat='{0:HH\\:mm}'}"
+                                                   FontSize="14"
+                                                   Margin="0,0,0,0"
+                                                   HorizontalOptions="EndAndExpand"/>
+                                            </StackLayout>
                                         </StackLayout>
-
 
                                         <StackLayout Orientation="Horizontal">
                                             <Button Text="Edit"
                                                 Padding="10,5"
                                                 FontSize="14"
                                                 CornerRadius="5"
-                                                BackgroundColor="#007AFF"
+                                                BackgroundColor="#2196F3"
                                                 TextColor="White"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightsViewModel}}, Path=SetOperatingFlightCommand}"
+                                                Clicked="NavigateToEditPage"
                                                 CommandParameter="{Binding .}"/>
 
                                             <Button Text="Del"
@@ -122,8 +140,20 @@
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightsViewModel}}, Path=DeleteFlightCommand}"
                                                 CommandParameter="{Binding Id}"
                                                 Margin="10,0,0,0"/>
-                                        </StackLayout>
 
+                                           
+                                            <ImageButton
+                                                Source="AppIcon/calendar.png"
+                                                Padding="5,5"
+                                                CornerRadius="5"
+                                                BackgroundColor="LightSlateGray"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FlightsViewModel}}, Path=AddEventToCalendarCommand}"
+                                                CommandParameter="{Binding Id}"
+                                                Margin="10,0,0,0"
+                                                WidthRequest="10"
+                                                HeightRequest="10"/>
+
+                                        </StackLayout>
                                     </StackLayout>
                                 </Frame>
                             </DataTemplate>
@@ -156,12 +186,12 @@
                 Grid.Row="1"
                 Text="Add New Flight"
                 Clicked="NavigateToAddPage"
-                BackgroundColor="#007AFF"
+                BackgroundColor="#2196F3"
                 TextColor="White"
                 FontSize="15"
                 CornerRadius="10"
                 HeightRequest="50"
-                Margin="15"
+                Margin="8"
                 HorizontalOptions="Center"
                 VerticalOptions="Center" />
         </Grid>

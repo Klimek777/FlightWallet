@@ -1,0 +1,34 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FlightWallet.Views.ImageModal"
+             Title="ImageModal">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollView Grid.Row="0">
+                <AbsoluteLayout x:Name="absoluteLayout">
+                    <Image x:Name="zoomableImage"
+                           Source="{Binding ImageSource}"
+                           Aspect="AspectFit"
+                           AbsoluteLayout.LayoutBounds="0,0,1,1"
+                           AbsoluteLayout.LayoutFlags="All">
+                        <Image.GestureRecognizers>
+                            <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
+                            <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+                            <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnDoubleTapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </AbsoluteLayout>
+            </ScrollView>
+            <Button Text="X"
+                    Clicked="OnCloseButtonClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="Black"
+                    Margin="10"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

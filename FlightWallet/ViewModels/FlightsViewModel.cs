@@ -9,16 +9,28 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventKit;
+using Foundation;
+using FlightWallet.Interfaces;
 
 namespace FlightWallet.ViewModels
 {
     public partial class FlightsViewModel : ObservableObject
-       
     {
         private readonly DatebaseContext _context;
+        private INavigation _navigation;
         public FlightsViewModel(DatebaseContext context)
         {
-            _context = context;   
+            _context = context;
+        }
+        public FlightsViewModel(DatebaseContext context, Flight flight)
+        {
+            _context = context;
+            _operatingFlight = flight;
+        }
+        public void SetNavigation(INavigation navigation)
+        {
+            _navigation = navigation;
         }
         [ObservableProperty]
         private ObservableCollection<Flight> _flights;
@@ -40,7 +52,7 @@ namespace FlightWallet.ViewModels
                     {
                         if (Flights is null)
                         {
-                            Flights ??= new ObservableCollection<Flight>();
+                            Flights = new ObservableCollection<Flight>();
                             foreach (var flight in flights)
                             {
                                 Flights.Add(flight);
@@ -53,8 +65,6 @@ namespace FlightWallet.ViewModels
                 await Shell.Current.DisplayAlert(" error", ex.ToString(), "OK");
 
             }
-
-
         }
         [RelayCommand]
         private void SetOperatingFlight(Flight? flight)=>OperatingFlight = flight ?? new();
@@ -66,7 +76,7 @@ namespace FlightWallet.ViewModels
             {
                 if (OperatingFlight is null)
                     return;
-                var busytext = OperatingFlight.Id == 0 ? "Creating flight..." : "Updateing flight";
+                var busytext = OperatingFlight.Id == 0 ? "Creating flight..." : "Updating flight";
                 await ExecuteAsync(async () =>
                 {
                     if (OperatingFlight.Id == 0)
@@ -92,46 +102,166 @@ namespace FlightWallet.ViewModels
                     }
                     else
                     {
-                        // Update Flight
-                        await _context.UpdateItemAsync<Flight>(OperatingFlight);
-                        var flightCopy = OperatingFlight;
+                        await LoadFlightsAsync();
 
-                        var index = Flights.IndexOf(OperatingFlight);
-                        Flights.RemoveAt(index);
+                        var flightToUpdate = Flights.FirstOrDefault(f => f.Id == OperatingFlight.Id);
 
-                        Flights.Insert(index, flightCopy);
+                        if (flightToUpdate != null)
+                        {
+                            // Zastąp ten element OperatingFlight
+                            Flights[Flights.IndexOf(flightToUpdate)] = OperatingFlight;
+                        }
 
+                        if (_context != null)
+                        {
+                            await _context.UpdateItemAsync<Flight>(OperatingFlight);
+                        }
+                        else
+                        {
+                            await Shell.Current.DisplayAlert("Error", "Context is null", "OK");
+                        }
                     }
-
 
                     SetOperatingFlightCommand.Execute(new());
 
-
                 }, busytext);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("error", ex.ToString(), "OK");
             }
-
+            finally
+            {
+                await _navigation.PushAsync(new MainPage(this));
+            }
         }
         [RelayCommand]
         private async Task DeleteFlightAsync(int id)
         {
-            await ExecuteAsync(async () => {
-                if (await _context.DeleteItemByKeyAsync<Flight>(id))
+            var result = await Shell.Current.DisplayActionSheet("Are you sure you want to delete flight?", "No", null, "Yes");
+
+            if (result == "Yes")
+            {
+                await ExecuteAsync(async () => {
+                    if (await _context.DeleteItemByKeyAsync<Flight>(id))
+                    {
+                        var flight = Flights.FirstOrDefault(f => f.Id == id);
+                        Flights.Remove(flight);
+
+                        Vibration.Vibrate(10000);
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Error while deleting", "The product was not deleted", "OK");
+                    }
+                }, "Delete product");
+            }
+            else
+            {
+                //DependencyService.Register<INotificationHelper, NotificationHelper>();
+                //var notificationHelper = DependencyService.Get<INotificationHelper>();
+                //await notificationHelper?.ShowNotification("Oops", "Your flight was not deleted!");
+            }
+        }
+        [RelayCommand]
+        private async Task AddEventToCalendarAsync(int id)
+        {
+            var result = await Shell.Current.DisplayActionSheet("Are you sure you want to add flight to calendar?", "Yes", null, "No");
+
+            if (result == "Yes")
+            {
+                var flight = Flights.FirstOrDefault(f => f.Id == id);
+
+                // Sprawdź, czy lot istnieje
+                if (flight != null)
                 {
-                    var flight = Flights.FirstOrDefault(f => f.Id == id);
-                    Flights.Remove(flight);
-                    //moze tu dodac wibracje ? albo modal z potwierdzeniem który wywołuje wibracje?
+                    // Spróbuj dodać wybrany lot do kalendarza
+                    bool success = await AddEventToCalendarAsync(flight);
+                    if (success)
+                    {
+                        await Shell.Current.DisplayAlert("Success", "Flight added to calendar successfully", "OK");
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Error", "Failed to add the flight to the calendar.", "OK");
+                    }
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Delete error", "Product was not deleted", "OK");
+                    await Shell.Current.DisplayAlert("Error", "Couldn't find the selected flight.", "OK");
                 }
-            }, "Deleting product");
-           
+            }
         }
-       
+
+        private async Task<bool> AddEventToCalendarAsync(Flight flight)
+        {
+           
+            try
+            {
+                EKEventStore eventStore = new EKEventStore();
+                // Utwórz nowy obiekt EKEventStore
+                var status = await Permissions.CheckStatusAsync<Permissions.CalendarRead>();
+                if (status != PermissionStatus.Granted)
+                {
+                    // Jeśli nie ma dostępu, poproś użytkownika o niego
+                    status = await Permissions.RequestAsync<Permissions.CalendarRead>();
+                }
+                if (status == PermissionStatus.Granted)
+                {
+                    await eventStore.RequestAccessAsync(EKEntityType.Event);
+                }
+
+                // Sprawdź, czy użytkownik udzielił uprawnień
+                if (EKEventStore.GetAuthorizationStatus(EKEntityType.Event) == EKAuthorizationStatus.Authorized)
+                {
+                    // Utwórz nowy obiekt EKEvent i ustaw jego właściwości na podstawie danych lotu
+                    NSDateFormatter formatter = new NSDateFormatter();
+                    formatter.DateFormat = "yyyy-MM-dd HH:mm:ss"; // Ustaw format daty
+
+                    DateTime startDateTime = flight.DepartureDate + flight.DepartureTime;
+                    DateTime endDateTime = startDateTime.AddHours(3);
+
+                    string dateTimeStartString = startDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    string dateTimeEndString = endDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    // Utwórz obiekt NSDate na podstawie łańcucha tekstowego
+                    var dateStart = formatter.Parse(dateTimeStartString);
+                    var dateEnd = formatter.Parse(dateTimeEndString);
+
+                    EKEvent newEvent = EKEvent.FromStore(eventStore);
+                    newEvent.Title = $"Flight {flight.FlightFromName} - {flight.FlightToName}"; // Tutaj możesz użyć dowolnej nazwy dla zdarzenia
+                    newEvent.Notes = $"Flight from {flight.FlightFromName}, {flight.AirportFromName}\nto {flight.FlightToName}, {flight.AirportToName}\nPrice: {flight.Price}"; // Tutaj możesz dodać dowolne notatki
+                    newEvent.StartDate = dateStart;
+                    newEvent.EndDate = dateEnd;
+                    newEvent.Calendar = eventStore.DefaultCalendarForNewEvents;
+
+                    // Zapisz zdarzenie do kalendarza
+                    eventStore.SaveEvent(newEvent, EKSpan.ThisEvent, out NSError error);
+
+                    if (error != null)
+                    {
+                        // Obsłuż błąd, jeśli wystąpił
+                        return false;
+                    }
+                    else
+                    {
+                        // Zdarzenie zostało pomyślnie dodane do kalendarza
+                        return true;
+                    }
+                }
+                else
+                {
+                    // Jeśli użytkownik nie udzielił uprawnień, zwróć false
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Obsłuż wyjątek
+                await Shell.Current.DisplayAlert(" error", ex.ToString(), "OK");
+                return false;
+            }
+        }
 
         private async Task ExecuteAsync(Func<Task> operation, string? busyText = null)
         {

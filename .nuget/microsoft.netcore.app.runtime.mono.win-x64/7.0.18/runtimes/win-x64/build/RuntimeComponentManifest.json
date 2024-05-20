@@ -1,0 +1,18 @@
+{
+    "items": {
+        "_MonoRuntimeComponentLinking": [
+            { "identity": "static", "RuntimeIdentifier": "windows-x64" },
+        ],
+        "_MonoRuntimeComponentSharedLibExt": [
+            { "identity": ".dll", "RuntimeIdentifier": "windows-x64" },
+        ],
+        "_MonoRuntimeComponentStaticLibExt": [
+            { "identity": ".lib", "RuntimeIdentifier": "windows-x64" },
+        ],
+        "_MonoRuntimeAvailableComponents": [
+            { "identity": "debugger", "RuntimeIdentifier": "windows-x64" },
+{ "identity": "hot_reload", "RuntimeIdentifier": "windows-x64" },
+{ "identity": "diagnostics_tracing", "RuntimeIdentifier": "windows-x64" },
+        ],
+    }
+}
